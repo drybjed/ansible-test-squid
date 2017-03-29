@@ -1,0 +1,31 @@
+---
+
+- name: Install required packages
+  package:
+    name: '{{ item }}'
+    state: 'present'
+  with_flattened:
+    - '{{ squid__base_packages }}'
+    - '{{ squid__packages }}'
+
+- name: Check current config file diversions
+  environment:
+    LC_ALL: 'C'
+  shell: dpkg-divert --list '/etc/squid3/*.dpkg-divert' | awk '{print $NF}'
+  register: squid__register_diversions
+  always_run: True
+  changed_when: False
+
+- name: Divert the default configuration files
+  command: dpkg-divert --quiet --local --divert /etc/squid3/{{ item }}.dpkg-divert --rename /etc/squid3/{{ item }}
+  with_items: [ 'squid.conf' ]
+  when: ('/etc/squid3/' + item + '.dpkg-divert' not in squid__register_diversions.stdout_lines)
+
+- name: Generate Squid configuration file
+  template:
+    src: 'etc/squid3/squid.conf.j2'
+    dest: '/etc/squid3/squid.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: [ 'Check squid3 configuration and restart' ]
