@@ -14,13 +14,29 @@
 # .. envvar:: squid__base_packages [[[
 #
 # List of base APT packages to install for Squid support.
-squid__base_packages: [ 'squid3' ]
+squid__base_packages: [ "{{ 'squid' if ansible_distribution_release == 'stretch' else 'squid3' }} " ]
 
                                                                    # ]]]
-# .. envvar:: squic__packages [[[
+# .. envvar:: squid__packages [[[
 #
 # List of additional APT packages to install with Squid.
 squid__packages: []
+                                                                   # ]]]
+
+# .. envvar:: squid__config_dir [[[
+#
+# Squid configuration dirctory path.
+squid__config_dir: "{{ '/etc/squid' if ansible_distribution_release == 'stretch' else '/etc/squid3' }}"
+                                                                   # ]]]
+# .. envvar:: squid__bin_path [[[
+#
+# Path to squid executable.
+squid__bin_path: "{{ '/usr/sbin/squid' if ansible_distribution_release == 'stretch' else '/usr/sbin/squid3' }}"
+                                                                   # ]]]
+# .. envvar:: squid__service_name [[[
+#
+# Name of the system service.
+squid__service_name: "{{ 'squid' if ansible_distribution_release == 'stretch' else 'squid3' }}"
                                                                    # ]]]
                                                                    # ]]]
 # Hostname and domain settings [[[
