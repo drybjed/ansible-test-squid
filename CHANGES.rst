@@ -16,6 +16,11 @@ The current role maintainer is drybjed_.
 
 .. _debops.squid master: https://github.com/debops/ansible-squid/compare/v0.1.0...master
 
+Changed
+~~~~~~~
+
+- Distinguish 'stretch' from other releases. [cultcom_]
+
 
 debops.squid v0.1.0 - 2016-08-06
 --------------------------------
